@@ -1,0 +1,18 @@
+doctype html
+html(ng-app="AngularApplicationBoilerplate")
+  head
+    meta(charset="utf-8")
+    title Angular Application Boilerplate
+    // build:css stylesheets.css
+    link(href="app.css", rel="stylesheet")
+    link(href="main/main.css", rel="stylesheet")
+    // endbuild
+  body
+    .container(ng-view="")
+    // build:js scripts.js
+    script(src="bower_components/jquery/dist/jquery.js")
+    script(src="bower_components/angular/angular.js")
+    script(src="bower_components/angular-route/angular-route.js")
+    script(src="app.js")
+    script(src="main/main_controller.js")
+    // endbuild
