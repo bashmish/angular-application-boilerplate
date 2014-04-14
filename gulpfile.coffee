@@ -1,4 +1,5 @@
 gulp    = require('gulp')
+runseq  = require('run-sequence')
 install = require('gulp-install')
 debug   = require('gulp-debug')
 jade    = require('gulp-jade')
@@ -53,11 +54,11 @@ gulp.task 'dist-remove', ->
   gulp.src('dist/**/*', read: false)
       .pipe(clean())
 
-gulp.task 'dist-copy-build', ['dist-remove', 'build'], ->
+gulp.task 'dist-copy-build', ->
   gulp.src('build/**/*')
       .pipe(gulp.dest('dist'))
 
-gulp.task 'dist-cache-templates', ['dist-copy-build'], ->
+gulp.task 'dist-cache-templates', ->
   gulp.src([
       'dist/*/**/*.html'
       '!dist/bower_components/**/*.html'
@@ -65,7 +66,7 @@ gulp.task 'dist-cache-templates', ['dist-copy-build'], ->
       .pipe(ngtmpl(module: 'AngularApplicationBoilerplate'))
       .pipe(gulp.dest('dist'))
 
-gulp.task 'dist-concat-templates', ['dist-cache-templates'], ->
+gulp.task 'dist-concat-templates', ->
   gulp.src([
       'dist/app.js'
       'dist/templates.js'
@@ -73,7 +74,7 @@ gulp.task 'dist-concat-templates', ['dist-cache-templates'], ->
       .pipe(concat('app.js'))
       .pipe(gulp.dest('dist'))
 
-gulp.task 'dist-min', ['dist-concat-templates'], ->
+gulp.task 'dist-min', ->
   gulp.src('dist/index.html')
       .pipe(usemin(
         css: [cssmin(), rev()]
@@ -81,7 +82,7 @@ gulp.task 'dist-min', ['dist-concat-templates'], ->
       ))
       .pipe(gulp.dest('dist'))
 
-gulp.task 'dist-clean', ['dist-copy-build', 'dist-min'], ->
+gulp.task 'dist-clean', ->
   gulp.src([
     'dist/bower_components/**/*'
     'dist/*/**/*.html'
@@ -93,23 +94,20 @@ gulp.task 'dist-clean', ['dist-copy-build', 'dist-min'], ->
   ], read: false)
       .pipe(clean())
 
-gulp.task 'build', [
-  'build-remove'
-  'build-bower-components'
-  'build-templates'
-  'build-stylesheets'
-  'build-scripts'
-]
+gulp.task 'build', (callback) ->
+  runseq 'build-remove',
+         ['build-bower-components', 'build-templates', 'build-stylesheets', 'build-scripts'],
+         callback
 
-gulp.task 'dist', [
-  'dist-remove'
-  'build'
-  'dist-copy-build'
-  'dist-cache-templates'
-  'dist-concat-templates'
-  'dist-min'
-  'dist-clean'
-]
+gulp.task 'dist', (callback) ->
+  runseq 'dist-remove',
+         'build',
+         'dist-copy-build',
+         'dist-cache-templates',
+         'dist-concat-templates',
+         'dist-min',
+         'dist-clean',
+         callback
 
 gulp.task 'server', ->
   connect.server
