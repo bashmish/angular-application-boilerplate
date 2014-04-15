@@ -5,6 +5,7 @@ debug   = require('gulp-debug')
 jade    = require('gulp-jade')
 coffee  = require('gulp-coffee')
 stylus  = require('gulp-stylus')
+nib     = require('nib')
 ngtmpl  = require('gulp-angular-templatecache')
 ngmin   = require('gulp-ngmin')
 jsmin   = require('gulp-uglify')
@@ -18,7 +19,7 @@ connect = require('gulp-connect')
 paths =
   templates:   ['app/**/*.jade',   '!app/bower_components/**/*.jade']
   scripts:     ['app/**/*.coffee', '!app/bower_components/**/*.coffee']
-  stylesheets: ['app/**/*.styl',   '!app/bower_components/**/*.styl']
+  stylesheets: ['app/app.styl']
 
 gulp.task 'install', ->
   gulp.src(['package.json', 'bower.json'])
@@ -47,7 +48,7 @@ gulp.task 'build-scripts', ->
 gulp.task 'build-stylesheets', ->
   gulp.src(paths.stylesheets)
       .pipe(connect.reload())
-      .pipe(stylus())
+      .pipe(stylus(use: [nib()]))
       .pipe(gulp.dest('build'))
 
 gulp.task 'dist-remove', ->
