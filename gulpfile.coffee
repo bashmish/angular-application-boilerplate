@@ -16,9 +16,9 @@ clean   = require('gulp-clean')
 connect = require('gulp-connect')
 
 paths =
-  templates:   ['app/**/*.jade']
-  scripts:     ['app/**/*.coffee']
-  stylesheets: ['app/**/*.styl']
+  templates:   ['app/**/*.jade',   '!app/bower_components/**/*.jade']
+  scripts:     ['app/**/*.coffee', '!app/bower_components/**/*.coffee']
+  stylesheets: ['app/**/*.styl',   '!app/bower_components/**/*.styl']
 
 gulp.task 'install', ->
   gulp.src(['package.json', 'bower.json'])
