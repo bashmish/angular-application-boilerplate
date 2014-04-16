@@ -118,4 +118,8 @@ gulp.task 'watch', ->
   gulp.watch(config.paths.scripts,     ['build-scripts'])
   gulp.watch(config.paths.stylesheets, ['build-stylesheets'])
 
-gulp.task 'default', ['install', 'build', 'server', 'watch']
+gulp.task 'default', (callback) ->
+  runseq 'install',
+         ['build', 'server'],
+         'watch',
+         callback
