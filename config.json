@@ -22,7 +22,8 @@
     },
     "bootstrap-stylus": {
       "js/*": "vendor/scripts/bootstrap/",
-      "stylus/*": "vendor/stylesheets/bootstrap/"
+      "stylus/*": "vendor/stylesheets/bootstrap/",
+      "fonts/*": ""
     },
     "jquery": {
       "dist/jquery.js": "vendor/scripts/"
