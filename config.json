@@ -1,7 +1,30 @@
 {
   "paths": {
-    "templates":   ["app/**/*.jade",   "!app/bower_components/**/*.jade"],
-    "scripts":     ["app/**/*.coffee", "!app/bower_components/**/*.coffee"],
-    "stylesheets": ["app/app.styl"]
+    "templates": {
+      "watch":   ["app/**/*.jade"],
+      "compile": ["build/**/*.jade"]
+    },
+    "scripts": {
+      "watch":   ["app/**/*.coffee"],
+      "compile": ["build/**/*.coffee"]
+    },
+    "stylesheets": {
+      "watch":   ["app/**/*.styl"],
+      "compile": ["build/app.styl"]
+    }
+  },
+  "bowerFiles": {
+    "angular": {
+      "angular.js": "vendor/scripts/"
+    },
+    "angular-route": {
+      "angular-route.js": "vendor/scripts/"
+    },
+    "bootstrap-stylus": {
+      "stylus/*": "vendor/stylesheets/bootstrap/"
+    },
+    "jquery": {
+      "dist/jquery.js": "vendor/scripts/"
+    }
   }
 }

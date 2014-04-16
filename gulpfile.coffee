@@ -26,27 +26,66 @@ gulp.task 'build-remove', ->
   gulp.src('build/**/*', read: false)
       .pipe(clean())
 
-gulp.task 'build-bower-components', ->
-  gulp.src('app/bower_components/**/*')
-      .pipe(gulp.dest('build/bower_components'))
+gulp.task 'build-bower-files', ->
+  for component, files of config.bowerFiles
+    for source, destination of files
+      source = "bower_components/#{component}/#{source}"
+      destination = "build/#{destination}"
+      gulp.src(source)
+          .pipe(gulp.dest(destination))
 
-gulp.task 'build-templates', ->
-  gulp.src(config.paths.templates)
+gulp.task 'build-copy-templates', ->
+  gulp.src(config.paths.templates.watch)
+      .pipe(gulp.dest('build'))
+
+gulp.task 'build-copy-scripts', ->
+  gulp.src(config.paths.scripts.watch)
+      .pipe(gulp.dest('build'))
+
+gulp.task 'build-copy-stylesheets', ->
+  gulp.src(config.paths.stylesheets.watch)
+      .pipe(gulp.dest('build'))
+
+gulp.task 'build-compile-templates', ->
+  gulp.src(config.paths.templates.compile)
       .pipe(connect.reload())
       .pipe(jade())
       .pipe(gulp.dest('build'))
 
-gulp.task 'build-scripts', ->
-  gulp.src(config.paths.scripts)
+gulp.task 'build-compile-scripts', ->
+  gulp.src(config.paths.scripts.compile)
       .pipe(connect.reload())
       .pipe(coffee())
       .pipe(gulp.dest('build'))
 
-gulp.task 'build-stylesheets', ->
-  gulp.src(config.paths.stylesheets)
+gulp.task 'build-compile-stylesheets', ->
+  gulp.src(config.paths.stylesheets.compile)
       .pipe(connect.reload())
       .pipe(stylus(use: [nib()]))
       .pipe(gulp.dest('build'))
+
+gulp.task 'build-templates', (callback) ->
+  runseq 'build-copy-templates',
+         'build-compile-templates',
+          callback
+
+gulp.task 'build-scripts', (callback) ->
+  runseq 'build-copy-scripts',
+         'build-compile-scripts',
+          callback
+
+gulp.task 'build-stylesheets', (callback) ->
+  runseq 'build-copy-stylesheets',
+         'build-compile-stylesheets',
+          callback
+
+gulp.task 'build-clean', ->
+  gulp.src([
+    'build/**/*.jade'
+    'build/**/*.coffee'
+    'build/**/*.styl'
+  ], read: false)
+      .pipe(clean())
 
 gulp.task 'dist-remove', ->
   gulp.src('dist/**/*', read: false)
@@ -59,7 +98,6 @@ gulp.task 'dist-copy-build', ->
 gulp.task 'dist-cache-templates', ->
   gulp.src([
       'dist/*/**/*.html'
-      '!dist/bower_components/**/*.html'
     ])
       .pipe(ngtmpl(module: 'AngularApplicationBoilerplate'))
       .pipe(gulp.dest('dist'))
@@ -82,7 +120,6 @@ gulp.task 'dist-min', ->
 
 gulp.task 'dist-clean', ->
   gulp.src([
-    'dist/bower_components/**/*'
     'dist/*/**/*.html'
     'dist/*/**/*.js'
     'dist/*/**/*.css'
@@ -94,7 +131,9 @@ gulp.task 'dist-clean', ->
 
 gulp.task 'build', (callback) ->
   runseq 'build-remove',
-         ['build-bower-components', 'build-templates', 'build-stylesheets', 'build-scripts'],
+         'build-bower-files',
+         ['build-templates', 'build-scripts', 'build-stylesheets'],
+         'build-clean',
          callback
 
 gulp.task 'dist', (callback) ->
@@ -114,9 +153,9 @@ gulp.task 'server', ->
     livereload: true
 
 gulp.task 'watch', ->
-  gulp.watch(config.paths.templates,   ['build-templates'])
-  gulp.watch(config.paths.scripts,     ['build-scripts'])
-  gulp.watch(config.paths.stylesheets, ['build-stylesheets'])
+  gulp.watch(config.paths.templates.watch,   ['build-templates'])
+  gulp.watch(config.paths.scripts.watch,     ['build-scripts'])
+  gulp.watch(config.paths.stylesheets.watch, ['build-stylesheets'])
 
 gulp.task 'default', (callback) ->
   runseq 'install',
