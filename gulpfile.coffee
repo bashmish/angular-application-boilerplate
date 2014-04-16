@@ -16,10 +16,7 @@ rev     = require('gulp-rev')
 clean   = require('gulp-clean')
 connect = require('gulp-connect')
 
-paths =
-  templates:   ['app/**/*.jade',   '!app/bower_components/**/*.jade']
-  scripts:     ['app/**/*.coffee', '!app/bower_components/**/*.coffee']
-  stylesheets: ['app/app.styl']
+config = require('./config.json')
 
 gulp.task 'install', ->
   gulp.src(['package.json', 'bower.json'])
@@ -34,19 +31,19 @@ gulp.task 'build-bower-components', ->
       .pipe(gulp.dest('build/bower_components'))
 
 gulp.task 'build-templates', ->
-  gulp.src(paths.templates)
+  gulp.src(config.paths.templates)
       .pipe(connect.reload())
       .pipe(jade())
       .pipe(gulp.dest('build'))
 
 gulp.task 'build-scripts', ->
-  gulp.src(paths.scripts)
+  gulp.src(config.paths.scripts)
       .pipe(connect.reload())
       .pipe(coffee())
       .pipe(gulp.dest('build'))
 
 gulp.task 'build-stylesheets', ->
-  gulp.src(paths.stylesheets)
+  gulp.src(config.paths.stylesheets)
       .pipe(connect.reload())
       .pipe(stylus(use: [nib()]))
       .pipe(gulp.dest('build'))
@@ -117,8 +114,8 @@ gulp.task 'server', ->
     livereload: true
 
 gulp.task 'watch', ->
-  gulp.watch(paths.templates,   ['build-templates'])
-  gulp.watch(paths.scripts,     ['build-scripts'])
-  gulp.watch(paths.stylesheets, ['build-stylesheets'])
+  gulp.watch(config.paths.templates,   ['build-templates'])
+  gulp.watch(config.paths.scripts,     ['build-scripts'])
+  gulp.watch(config.paths.stylesheets, ['build-stylesheets'])
 
 gulp.task 'default', ['install', 'build', 'server', 'watch']

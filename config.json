@@ -1,0 +1,7 @@
+{
+  "paths": {
+    "templates":   ["app/**/*.jade",   "!app/bower_components/**/*.jade"],
+    "scripts":     ["app/**/*.coffee", "!app/bower_components/**/*.coffee"],
+    "stylesheets": ["app/app.styl"]
+  }
+}
