@@ -21,6 +21,7 @@
       "angular-route.js": "vendor/scripts/"
     },
     "bootstrap-stylus": {
+      "js/*": "vendor/scripts/bootstrap/",
       "stylus/*": "vendor/stylesheets/bootstrap/"
     },
     "jquery": {
