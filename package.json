@@ -1,6 +1,10 @@
 {
   "name": "angular-application-boilerplate",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bashmish/angular-application-boilerplate.git"
+  },
   "devDependencies": {
     "coffee-script": "^1.7.1",
     "gulp": "^3.6.0",
